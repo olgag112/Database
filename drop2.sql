@@ -1,0 +1,15 @@
+
+DROP TABLE [Delivery_company],
+  [Product_placement],
+  [Order_position],
+  [Payment],
+  [Order_],
+  [Delivery_position],
+  [Delivery],
+  [Affiliation],
+  [Price_offer],
+  [Book],
+  [Literary_Work],
+  [Author],
+  [Warehouse],
+  [Customer];

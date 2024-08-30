@@ -1,0 +1,115 @@
+CREATE TABLE Author(
+authorID VARCHAR(4) NOT NULL PRIMARY KEY,
+a_name VARCHAR(20) NOT NULL,
+surname  VARCHAR(20) NOT NULL,
+);
+
+CREATE TABLE Literary_work(
+literary_workID VARCHAR(4) NOT NULL PRIMARY KEY,
+title VARCHAR(50),
+publishing_year INT,
+literary_period VARCHAR(20)
+);
+
+CREATE TABLE Customer(
+customerID VARCHAR(4) NOT NULL PRIMARY KEY,
+c_name VARCHAR(20) NOT NULL,
+surname VARCHAR(20) NOT NULL,
+email VARCHAR(20) NOT NULL
+);
+
+
+CREATE TABLE Warehouse(
+warehouseID VARCHAR(4) NOT NULL  PRIMARY KEY,
+adress VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Delivery_company(
+companyID VARCHAR(4) NOT NULL PRIMARY KEY,
+company_name VARCHAR(10) NOT NULL,
+phone_number VARCHAR(12),
+operating_region VARCHAR(20)
+);
+
+
+CREATE TABLE Book(
+bookID VARCHAR(4) NOT NULL PRIMARY KEY,
+title VARCHAR(50) NOT NULL,
+book_type VARCHAR(30) NOT NULL,
+b_language VARCHAR(20) NOT NULL,
+num_of_pages int NOT NULL,
+ratings DECIMAL(4,2) NOT NULL,
+FKauthorID VARCHAR(4) FOREIGN KEY REFERENCES Author(authorID)
+);
+
+
+
+CREATE TABLE Affiliation(
+FKbookID VARCHAR(4) FOREIGN KEY REFERENCES Book(bookID),
+FKliterary_workID VARCHAR(4) FOREIGN KEY REFERENCES Literary_work(literary_workID)
+);
+
+CREATE TABLE Price_offer(
+priceID VARCHAR(4) NOT NULL PRIMARY KEY,
+curr_p DECIMAL(4,2) NOT NULL,
+prev_p DECIMAL(4,2),
+date_of_change DATE,
+FKbookID VARCHAR(4) FOREIGN KEY REFERENCES Book(bookID),
+);
+
+CREATE TABLE Delivery(
+
+deliveryID VARCHAR(4) NOT NULL PRIMARY KEY,
+part_num int,
+adress VARCHAR(50) NOT NULL,
+stat VARCHAR(10) NOT NULL,
+FKcustomerID VARCHAR(4) FOREIGN KEY REFERENCES Customer(customerID) NOT NULL
+);
+
+CREATE TABLE Delivery_position(
+unitID VARCHAR(4) NOT NULL PRIMARY KEY,
+FKdeliveryID VARCHAR(4) FOREIGN KEY REFERENCES Delivery(deliveryID)
+);
+
+CREATE TABLE Order_(
+orderID VARCHAR(4) NOT NULL PRIMARY KEY,
+order_date DATE NOT NULL,
+quantity int NOT NULL,
+total_cost DECIMAL(4,2) NOT NULL,
+stat VARCHAR(10) NOT NULL,
+FKcustomerID VARCHAR(4) FOREIGN KEY REFERENCES Customer(customerID),
+FKdeliveryID VARCHAR(4) FOREIGN KEY REFERENCES Delivery(deliveryID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE Order_position(
+productID VARCHAR(4) NOT NULL PRIMARY KEY,
+quantity int NOT NULL,
+FKorderID VARCHAR(4) FOREIGN KEY REFERENCES Order_(orderID) ON DELETE CASCADE ON UPDATE CASCADE,
+FKpriceID VARCHAR(4) FOREIGN KEY REFERENCES Price_offer(priceID)
+);
+
+
+CREATE TABLE Delivery_position(
+unitID VARCHAR(4) NOT NULL PRIMARY KEY,
+);
+
+CREATE TABLE Product_placement (
+    FKproductID VARCHAR(4),
+    FKwarehouseID VARCHAR(4),
+    PRIMARY KEY (FKproductID, FKwarehouseID),
+    FOREIGN KEY (FKproductID) REFERENCES Order_position(productID),
+    FOREIGN KEY (FKwarehouseID) REFERENCES Warehouse(warehouseID)
+);
+
+ 
+CREATE TABLE Payment(
+paymentID VARCHAR(4) NOT NULL PRIMARY KEY,
+ammount DECIMAL(6,2),
+date_ofpayment DATE,
+stat VARCHAR(10),
+method VARCHAR(10),
+FKcustomerID VARCHAR(4) FOREIGN KEY REFERENCES Customer(customerID),
+FKorderID VARCHAR(4) FOREIGN KEY REFERENCES Order_(orderID)
+);
+
